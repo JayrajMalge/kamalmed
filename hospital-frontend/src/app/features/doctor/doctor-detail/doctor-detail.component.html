@@ -1,0 +1,80 @@
+<div class="loader" *ngIf="loading"><div class="spinner"></div></div>
+<div *ngIf="!loading && doctor">
+  <div class="page-header"><h1>Dr. {{ doctor.name }}</h1></div>
+  <section class="section"><div class="container">
+    <div class="doctor-profile">
+      <div class="profile-left">
+        <div class="profile-photo" *ngIf="doctor.profilephotopath; else noPhoto">
+          <img [src]="getImageUrl(doctor.profilephotopath)" [alt]="doctor.name">
+        </div>
+        <ng-template #noPhoto><div class="photo-placeholder"><i class="fas fa-user-md"></i></div></ng-template>
+        <div class="profile-meta">
+          <p *ngIf="doctor.email"><i class="fas fa-envelope"></i> {{ doctor.email }}</p>
+          <p *ngIf="doctor.phone"><i class="fas fa-phone"></i> {{ doctor.phone }}</p>
+          <p *ngIf="doctor.schedulefrom && doctor.scheduleto"><i class="fas fa-clock"></i> {{ doctor.schedulefrom }} – {{ doctor.scheduleto }}</p>
+          <div class="specs" *ngIf="doctor.specializations?.length">
+            <span *ngFor="let s of doctor.specializations" class="badge badge-blue">{{ s.specialization?.fieldname }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="profile-right">
+        <div class="about-section" *ngIf="doctor.about">
+          <h3>About</h3>
+          <div [innerHTML]="doctor.about"></div>
+        </div>
+        <div class="edu-section" *ngIf="doctor.educations?.length">
+          <h3>Education</h3>
+          <div class="edu-item" *ngFor="let e of doctor.educations">
+            <strong>{{ e.degree }}</strong> – {{ e.universityname }}
+            <span class="edu-dates" *ngIf="e.fromdate || e.todate">{{ e.fromdate | date:'yyyy' }} – {{ e.todate | date:'yyyy' }}</span>
+          </div>
+        </div>
+        <div class="exp-section" *ngIf="doctor.experiences?.length">
+          <h3>Experience</h3>
+          <div class="exp-item" *ngFor="let e of doctor.experiences">
+            <strong>{{ e.field }}</strong> at {{ e.hospitalname }}
+            <span *ngIf="e.years"> ({{ e.years }} yrs)</span>
+          </div>
+        </div>
+
+        <!-- APPOINTMENT BOOKING -->
+        <div class="appointment-box">
+          <h3>Book Appointment</h3>
+          <div *ngIf="!auth.isLoggedIn()" class="alert alert-error">
+            Please <a routerLink="/auth/login">login</a> to book an appointment.
+          </div>
+          <div *ngIf="booked" class="alert alert-success">Appointment booked successfully!</div>
+          <form *ngIf="auth.isLoggedIn() && !booked" [formGroup]="appointmentForm" (ngSubmit)="bookAppointment()">
+            <div class="form-group">
+              <label>Appointment Date & Time *</label>
+              <input type="datetime-local" formControlName="appointmentdate">
+              <div class="error-msg" *ngIf="appointmentForm.get('appointmentdate')?.invalid && appointmentForm.get('appointmentdate')?.touched">Date is required.</div>
+            </div>
+            <div class="form-group">
+              <label>Mobile Number *</label>
+              <input type="tel" formControlName="mobileno" placeholder="10-digit mobile number">
+              <div class="error-msg" *ngIf="appointmentForm.get('mobileno')?.invalid && appointmentForm.get('mobileno')?.touched">Enter a valid 10-digit mobile number.</div>
+            </div>
+            <button type="submit" class="btn btn-primary" [disabled]="booking">{{ booking ? 'Booking...' : 'Book Appointment' }}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div></section>
+</div>
+<style>
+.doctor-profile { display: grid; grid-template-columns: 300px 1fr; gap: 40px; align-items: start; }
+.profile-photo img { width: 100%; border-radius: 16px; }
+.photo-placeholder { width: 100%; height: 260px; background: linear-gradient(135deg,#e8f0fe,#c5cae9); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: #1565c0; }
+.profile-meta { margin-top: 20px; }
+.profile-meta p { color: #546e7a; font-size: 0.88rem; margin-bottom: 8px; }
+.profile-meta i { margin-right: 8px; color: #1565c0; }
+.specs { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+.about-section, .edu-section, .exp-section { margin-bottom: 28px; }
+.about-section h3, .edu-section h3, .exp-section h3, .appointment-box h3 { color: #1565c0; font-size: 1.1rem; margin-bottom: 12px; border-bottom: 2px solid #e8f0fe; padding-bottom: 8px; }
+.about-section div { color: #37474f; line-height: 1.8; }
+.edu-item, .exp-item { padding: 10px 0; border-bottom: 1px solid #f0f4ff; font-size: 0.9rem; color: #37474f; }
+.edu-dates { color: #90a4ae; font-size: 0.82rem; margin-left: 8px; }
+.appointment-box { background: #f8faff; border-radius: 16px; padding: 28px; border: 1px solid #e0e7ef; }
+@media (max-width: 800px) { .doctor-profile { grid-template-columns: 1fr; } }
+</style>

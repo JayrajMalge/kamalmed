@@ -1,0 +1,22 @@
+<div class="page-header"><h1>Treatments</h1><p>Advanced treatment options for better outcomes</p></div>
+<section class="section"><div class="container">
+  <div class="loader" *ngIf="loading"><div class="spinner"></div></div>
+  <div class="grid grid-3" *ngIf="!loading">
+    <div class="card treatment-card" *ngFor="let t of treatments">
+      <div class="treatment-icon"><i class="fas fa-heartbeat"></i></div>
+      <h3>{{ t.title }}</h3>
+      <div class="treatment-desc" [innerHTML]="t.description?.slice(0, 150) + '...'"></div>
+      <span class="cost" *ngIf="t.cost">&#8377;{{ t.cost | number }}</span>
+    </div>
+  </div>
+  <div *ngIf="!loading && treatments.length === 0" class="empty-state"><i class="fas fa-heartbeat"></i><p>No treatments found.</p></div>
+</div></section>
+<style>
+.treatment-card { padding: 28px; text-align: center; }
+.treatment-icon { width: 56px; height: 56px; background: linear-gradient(135deg,#1565c0,#1e88e5); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.4rem; margin: 0 auto 16px; }
+.treatment-card h3 { color: #1565c0; margin-bottom: 10px; }
+.treatment-desc { color: #546e7a; font-size: 0.88rem; line-height: 1.7; margin-bottom: 12px; }
+.cost { display: inline-block; font-weight: 700; color: #388e3c; font-size: 1rem; }
+.empty-state { text-align: center; padding: 60px; color: #90a4ae; }
+.empty-state i { font-size: 3rem; margin-bottom: 16px; display: block; }
+</style>

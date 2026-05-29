@@ -1,0 +1,79 @@
+<div class="admin-section">
+  <div class="section-header"><h2>Doctors</h2></div>
+  <div class="admin-form card">
+    <h3>{{ editingId ? 'Edit' : 'Add' }} Doctor</h3>
+    <div class="alert alert-success" *ngIf="success">{{ success }}</div>
+    <div class="alert alert-error" *ngIf="error">{{ error }}</div>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-row">
+        <div class="form-group"><label>Name *</label><input type="text" formControlName="name" placeholder="Doctor's full name">
+          <div class="error-msg" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">Name required (max 50 chars).</div></div>
+        <div class="form-group"><label>Email</label><input type="email" formControlName="email" placeholder="doctor@example.com">
+          <div class="error-msg" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">Enter valid email.</div></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Phone</label><input type="tel" formControlName="phone" placeholder="10-12 digit number">
+          <div class="error-msg" *ngIf="form.get('phone')?.invalid && form.get('phone')?.touched">Enter valid phone (10-12 digits).</div></div>
+        <div class="form-group"><label>Schedule From</label><input type="time" formControlName="schedulefrom"></div>
+        <div class="form-group"><label>Schedule To</label><input type="time" formControlName="scheduleto"></div>
+      </div>
+      <div class="form-group"><label>About</label>
+        <app-rich-text-editor formControlName="about" placeholder="Write something about the doctor..."></app-rich-text-editor></div>
+      <div class="form-group">
+        <label>Specializations</label>
+        <div class="spec-chips">
+          <button *ngFor="let s of specializations" type="button" class="chip" [class.active]="isSpecSelected(s.speacializationid)" (click)="toggleSpec(s.speacializationid)">{{ s.fieldname }}</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Profile Photo <small>(White background recommended)</small></label>
+        <input type="file" accept="image/*" (change)="onPhotoChange($event)">
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-blue" [disabled]="submitting">{{ submitting ? 'Saving...' : (editingId ? 'Update' : 'Add') }}</button>
+        <button type="button" class="btn btn-outline" *ngIf="editingId" (click)="cancel()">Cancel</button>
+      </div>
+    </form>
+  </div>
+  <div class="loader" *ngIf="loading"><div class="spinner"></div></div>
+  <div class="admin-table" *ngIf="!loading">
+    <table><thead><tr><th>Photo</th><th>Name</th><th>Email</th><th>Schedule</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let d of doctors">
+          <td><img *ngIf="d.profilephotopath" [src]="getImageUrl(d.profilephotopath)" class="thumb" [alt]="d.name"></td>
+          <td><strong>{{ d.name }}</strong></td>
+          <td>{{ d.email || '—' }}</td>
+          <td>{{ (d.schedulefrom && d.scheduleto) ? (d.schedulefrom + ' – ' + d.scheduleto) : '—' }}</td>
+          <td class="actions">
+            <button class="btn-icon edit" (click)="edit(d)"><i class="fas fa-edit"></i></button>
+            <button class="btn-icon delete" (click)="delete(d.doctorid)"><i class="fas fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="doctors.length === 0" class="empty-state"><p>No doctors yet.</p></div>
+  </div>
+</div>
+<style>
+.admin-section { max-width: 900px; }
+.section-header { margin-bottom: 24px; }
+.section-header h2 { font-size: 1.4rem; color: #1565c0; }
+.admin-form { padding: 28px; margin-bottom: 28px; }
+.admin-form h3 { font-size: 1rem; font-weight: 700; margin-bottom: 20px; }
+.form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+.form-actions { display: flex; gap: 12px; }
+.spec-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.admin-table { background: #fff; border-radius: 12px; border: 1px solid #e0e7ef; overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+th { background: #f0f4ff; padding: 12px 16px; text-align: left; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; color: #546e7a; }
+td { padding: 12px 16px; border-bottom: 1px solid #f0f4ff; font-size: 0.9rem; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+.thumb { height: 40px; width: 40px; object-fit: cover; border-radius: 50%; }
+.actions { display: flex; gap: 8px; }
+.btn-icon { width: 34px; height: 34px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; transition: all 0.2s; }
+.btn-icon.edit { background: #e8f0fe; color: #1565c0; }
+.btn-icon.edit:hover { background: #1565c0; color: #fff; }
+.btn-icon.delete { background: rgba(229,57,53,0.1); color: #e53935; }
+.btn-icon.delete:hover { background: #e53935; color: #fff; }
+.empty-state { padding: 32px; text-align: center; color: #90a4ae; }
+</style>

@@ -1,0 +1,32 @@
+<div class="page-header"><h1>News &amp; Blogs</h1><p>Stay updated with the latest from Kamal Medicare</p></div>
+<section class="section"><div class="container">
+  <div class="news-filter">
+    <button *ngFor="let t of types" class="chip" [class.active]="activeType === t" (click)="filter(t)">{{ t }}</button>
+  </div>
+  <div class="loader" *ngIf="loading"><div class="spinner"></div></div>
+  <div class="grid grid-3" *ngIf="!loading">
+    <div class="card news-card" *ngFor="let n of filtered" [routerLink]="['/news', n.newsid]">
+      <div class="news-img" *ngIf="n.images?.[0]">
+        <img [src]="getImageUrl(n.images![0].imagepath)" [alt]="n.title" loading="lazy">
+      </div>
+      <div class="news-body">
+        <span class="badge badge-blue" *ngIf="n.newstype">{{ n.newstype }}</span>
+        <h4>{{ n.title }}</h4>
+        <p [innerHTML]="n.description?.slice(0, 120) + '...'"></p>
+        <span class="news-date"><i class="fas fa-calendar"></i> {{ n.newsdate | date:'mediumDate' }}</span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!loading && filtered.length === 0" class="empty-state"><i class="fas fa-newspaper"></i><p>No articles found.</p></div>
+</div></section>
+<style>
+.news-filter { display: flex; gap: 10px; margin-bottom: 32px; flex-wrap: wrap; }
+.news-card { cursor: pointer; }
+.news-img img { width: 100%; height: 200px; object-fit: cover; }
+.news-body { padding: 20px; }
+.news-body h4 { margin: 10px 0 8px; color: #1a1a2e; }
+.news-body p { color: #546e7a; font-size: 0.88rem; }
+.news-date { color: #90a4ae; font-size: 0.8rem; margin-top: 10px; display: block; }
+.empty-state { text-align: center; padding: 60px; color: #90a4ae; }
+.empty-state i { font-size: 3rem; margin-bottom: 16px; display: block; }
+</style>

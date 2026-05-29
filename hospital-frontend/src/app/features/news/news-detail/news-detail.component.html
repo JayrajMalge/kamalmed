@@ -1,0 +1,18 @@
+<div class="loader" *ngIf="loading"><div class="spinner"></div></div>
+<div *ngIf="!loading && news">
+  <div class="page-header"><h1>{{ news.title }}</h1><p><i class="fas fa-calendar"></i> {{ news.newsdate | date:'longDate' }}</p></div>
+  <section class="section"><div class="container news-article">
+    <div class="article-images" *ngIf="news.images?.length">
+      <img *ngFor="let img of news.images" [src]="getImageUrl(img.imagepath)" [alt]="img.imagename" loading="lazy">
+    </div>
+    <div class="article-body" [innerHTML]="news.description"></div>
+    <div class="back-link"><a routerLink="/news" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back to News</a></div>
+  </div></section>
+</div>
+<style>
+.news-article { max-width: 800px; margin: 0 auto; }
+.article-images { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 32px; }
+.article-images img { max-width: 100%; border-radius: 12px; }
+.article-body { color: #37474f; line-height: 1.9; font-size: 1rem; }
+.back-link { margin-top: 40px; }
+</style>

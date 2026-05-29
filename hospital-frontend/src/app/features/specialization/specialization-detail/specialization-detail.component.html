@@ -1,0 +1,46 @@
+<div *ngIf="loading" class="loader"><div class="spinner"></div></div>
+
+<div *ngIf="!loading && specialization">
+  <div class="page-header">
+    <h1>{{ specialization.fieldname }}</h1>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="spec-description" [innerHTML]="specialization.description"></div>
+
+      <div class="sub-spec-section" *ngIf="subSpecs.length">
+        <div class="spec-chips">
+          <button *ngFor="let sub of subSpecs" class="chip" [class.active]="activeSubSpec?.subspeacializationid === sub.subspeacializationid" (click)="selectSub(sub)">
+            {{ sub.name }}
+          </button>
+        </div>
+
+        <div class="sub-spec-content" *ngIf="activeSubSpec">
+          <div class="sub-spec-grid">
+            <div class="sub-spec-text">
+              <h3>{{ activeSubSpec.name }}</h3>
+              <div [innerHTML]="activeSubSpec.description"></div>
+            </div>
+            <div class="sub-spec-images" *ngIf="activeSubSpec.images?.length">
+              <div class="img-carousel">
+                <img *ngFor="let img of activeSubSpec.images?.slice(0, 1)" [src]="getImageUrl(img.imagepath)" [alt]="img.imagename" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+.spec-description { color: #37474f; line-height: 1.8; font-size: 0.95rem; margin-bottom: 40px; }
+.sub-spec-section { margin-top: 32px; }
+.spec-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px; }
+.sub-spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+.sub-spec-text h3 { color: #1565c0; font-size: 1.2rem; margin-bottom: 16px; }
+.sub-spec-text { color: #37474f; line-height: 1.8; }
+.sub-spec-images img { width: 100%; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.1); }
+@media (max-width: 700px) { .sub-spec-grid { grid-template-columns: 1fr; } }
+</style>
