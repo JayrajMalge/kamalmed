@@ -1,5 +1,6 @@
 package com.kamalmedicare.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +19,7 @@ public class FacilityImage {
     @Column(name = "imagepath")
     private String imagepath;
 
+    @JsonBackReference("facility-images")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facility")
     private Facility facility;

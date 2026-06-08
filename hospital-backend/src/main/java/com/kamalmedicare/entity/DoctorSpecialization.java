@@ -1,5 +1,6 @@
 package com.kamalmedicare.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,6 +16,7 @@ public class DoctorSpecialization {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long doctorspeacializationid;
 
+    @JsonBackReference("doctor-specializations")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor")
     private Doctor doctor;

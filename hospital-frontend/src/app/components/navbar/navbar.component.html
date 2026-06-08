@@ -1,0 +1,50 @@
+<nav class="navbar" [class.scrolled]="isScrolled">
+  <div class="nav-container">
+
+    <!-- Brand / Logo -->
+    <div class="brand">
+      <a routerLink="/" class="logo">
+        <div class="logo-icon-wrap">
+          <i class="fa-solid fa-house-medical brand-icon"></i>
+        </div>
+        <div class="logo-text">
+          <span class="logo-name">KAMAL MEDICARE</span>
+          <span class="logo-tagline">Cancer Centre &amp; Hospital</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Hamburger -->
+    <button class="menu-toggle" (click)="toggleMobileMenu()" aria-label="Toggle menu">
+      <i class="fa-solid" [ngClass]="isMobileMenuOpen ? 'fa-xmark' : 'fa-bars'"></i>
+    </button>
+
+    <!-- Nav links -->
+    <ul class="nav-links" [class.mobile-open]="isMobileMenuOpen">
+      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="isMobileMenuOpen = false">Home</a></li>
+      <li><a routerLink="/specializations" routerLinkActive="active" (click)="isMobileMenuOpen = false">Specialization</a></li>
+      <li><a routerLink="/diseases" routerLinkActive="active" (click)="isMobileMenuOpen = false">Disease</a></li>
+      <li><a routerLink="/doctors-appointments" routerLinkActive="active" (click)="isMobileMenuOpen = false">About Us</a></li>
+      <li><a routerLink="/news-blogs" routerLinkActive="active" (click)="isMobileMenuOpen = false">Patient Guide</a></li>
+    </ul>
+
+    <!-- Right-side actions -->
+    <div class="nav-actions">
+      <ng-container *ngIf="!isLoggedIn">
+        <a routerLink="/doctors-appointments" class="btn-book">
+          Book Appointment
+        </a>
+      </ng-container>
+      <ng-container *ngIf="isLoggedIn">
+        <div class="user-pill">
+          <i class="fa-solid fa-circle-user"></i>
+          <span>{{ username }}</span>
+          <span class="user-role-badge" *ngIf="role === 'Admin'">Admin</span>
+        </div>
+        <a routerLink="/admin" *ngIf="role === 'Admin'" class="btn-nav admin-btn">Dashboard</a>
+        <button (click)="logout()" class="btn-nav logout-btn">Logout</button>
+      </ng-container>
+    </div>
+
+  </div>
+</nav>

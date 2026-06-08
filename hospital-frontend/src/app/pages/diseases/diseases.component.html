@@ -1,0 +1,77 @@
+<div class="diseases-page">
+  <div class="header-banner">
+    <div class="container">
+      <h1>Diseases Information Directory</h1>
+      <p>Educational resources about common diseases, symptoms, and medical guidelines.</p>
+    </div>
+  </div>
+
+  <div class="container section">
+    <!-- Search Bar -->
+    <div class="search-panel">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery" 
+          (input)="filterDiseases()" 
+          placeholder="Search diseases, symptoms, or descriptions..." 
+          class="form-control search-input" 
+        />
+      </div>
+    </div>
+
+    <div class="loading-spinner" *ngIf="loading">
+      <i class="fa-solid fa-circle-notch fa-spin"></i> Loading directory...
+    </div>
+
+    <!-- Grid Layout -->
+    <div class="grid-3" *ngIf="!loading && filteredDiseases.length > 0">
+      <div class="card disease-card" *ngFor="let d of filteredDiseases" (click)="selectDisease(d)">
+        <div class="disease-img-container">
+          <img 
+            [src]="d.images && d.images.length > 0 ? 'http://localhost:8080/uploads/' + d.images[0].imagepath : 'assets/placeholder-disease.png'" 
+            alt="{{ d.name }}" 
+            class="disease-image" 
+          />
+        </div>
+        
+        <div class="disease-info">
+          <h3>{{ d.name }}</h3>
+          <div class="disease-desc" [innerHTML]="d.description"></div>
+          <div class="card-action">
+            <span>Read Details <i class="fa-solid fa-circle-info"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-data" *ngIf="!loading && filteredDiseases.length === 0">
+      <i class="fa-solid fa-face-frown"></i>
+      <p>No diseases matching "{{ searchQuery }}" found in our database.</p>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ selectedDisease?.name }}</h2>
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="disease-detail-img" *ngIf="selectedDisease?.images && selectedDisease.images.length > 0">
+          <img [src]="'http://localhost:8080/uploads/' + selectedDisease.images[0].imagepath" alt="{{ selectedDisease.name }}" />
+        </div>
+        
+        <div class="disease-full-desc mt-3">
+          <h4>Clinical Overview & Guidelines</h4>
+          <div [innerHTML]="selectedDisease?.description"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,99 @@
+<div class="facilities-page">
+  <div class="header-banner">
+    <div class="container">
+      <h1>Hospital Facilities</h1>
+      <p>Modern equipment and patient care services active around the clock.</p>
+    </div>
+  </div>
+
+  <div class="container section">
+    <div class="loading-spinner" *ngIf="loading">
+      <i class="fa-solid fa-circle-notch fa-spin"></i> Loading Facilities...
+    </div>
+
+    <!-- Facilities Grid -->
+    <div class="grid-3" *ngIf="!loading && facilities.length > 0">
+      <div class="card facility-card" *ngFor="let fac of facilities" (click)="selectFacility(fac)">
+        <div class="facility-img-container">
+          <img 
+            [src]="fac.images && fac.images.length > 0 ? 'http://localhost:8080/uploads/' + fac.images[0].imagepath : 'assets/placeholder-facility.png'" 
+            alt="{{ fac.facilityname }}" 
+            class="facility-image" 
+          />
+          <div class="availability-badge">
+            <span class="badge" [ngClass]="fac.availability === 'yes' ? 'badge-success' : 'badge-danger'">
+              {{ fac.availability === 'yes' ? 'Available' : 'Unavailable' }}
+            </span>
+          </div>
+        </div>
+        
+        <div class="facility-info">
+          <span class="facility-type" *ngIf="fac.facilitytype">{{ fac.facilitytype }}</span>
+          <h3>{{ fac.facilityname }}</h3>
+          <div class="facility-desc" [innerHTML]="fac.description"></div>
+          <div class="card-action">
+            <span>View Photos & Details <i class="fa-solid fa-arrow-right"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-data" *ngIf="!loading && facilities.length === 0">
+      <i class="fa-solid fa-hospital-user"></i>
+      <p>No facilities registered. Please check back later.</p>
+    </div>
+  </div>
+
+  <!-- Photo Gallery Modal -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h2>{{ selectedFacility?.facilityname }}</h2>
+          <span class="badge mt-1" [ngClass]="selectedFacility?.availability === 'yes' ? 'badge-success' : 'badge-danger'">
+            {{ selectedFacility?.availability === 'yes' ? 'Available' : 'Unavailable' }}
+          </span>
+        </div>
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Photo Carousel -->
+        <div class="carousel-container" *ngIf="selectedFacility?.images && selectedFacility.images.length > 0">
+          <div class="carousel-slide">
+            <img [src]="'http://localhost:8080/uploads/' + selectedFacility.images[activeImageIndex].imagepath" alt="Facility view" />
+          </div>
+          <button class="carousel-control prev" (click)="prevImage()" *ngIf="selectedFacility.images.length > 1">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button class="carousel-control next" (click)="nextImage()" *ngIf="selectedFacility.images.length > 1">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+          
+          <div class="carousel-indicators" *ngIf="selectedFacility.images.length > 1">
+            <span 
+              *ngFor="let img of selectedFacility.images; let idx = index" 
+              [class.active]="idx === activeImageIndex"
+              (click)="activeImageIndex = idx">
+            </span>
+          </div>
+        </div>
+
+        <div class="no-images-placeholder" *ngIf="!selectedFacility?.images || selectedFacility.images.length === 0">
+          <i class="fa-solid fa-image"></i>
+          <p>No photos uploaded for this facility.</p>
+        </div>
+
+        <div class="facility-full-desc mt-3">
+          <h4>About this Facility</h4>
+          <div [innerHTML]="selectedFacility?.description"></div>
+          <p class="meta-type" *ngIf="selectedFacility?.facilitytype">
+            <strong>Facility Classification:</strong> {{ selectedFacility.facilitytype }}
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

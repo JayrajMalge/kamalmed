@@ -1,8 +1,10 @@
 package com.kamalmedicare.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,8 +34,10 @@ public class Facility {
     @Column(length = 30)
     private String facilitytype;
 
+    @JsonManagedReference("facility-images")
+    @Builder.Default
     @OneToMany(mappedBy = "facility", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FacilityImage> images;
+    private List<FacilityImage> images = new ArrayList<>();
 
     public enum Availability {
         yes, no

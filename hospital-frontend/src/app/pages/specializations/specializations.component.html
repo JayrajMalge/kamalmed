@@ -1,0 +1,74 @@
+<div class="specializations-page">
+  <div class="header-banner">
+    <div class="container">
+      <h1>Medical Specializations</h1>
+      <p>Explore our specialized clinical centers and centers of excellence.</p>
+    </div>
+  </div>
+
+  <div class="container section">
+    <div class="loading-spinner" *ngIf="loading">
+      <i class="fa-solid fa-circle-notch fa-spin"></i> Loading Specializations...
+    </div>
+
+    <!-- Grid Layout -->
+    <div class="grid-3" *ngIf="!loading && specializations.length > 0">
+      <div class="card spec-card" *ngFor="let spec of specializations" (click)="selectSpecialization(spec)">
+        <div class="spec-img-container">
+          <img [src]="spec.imagepath ? 'http://localhost:8080/uploads/' + spec.imagepath : 'assets/placeholder-spec.png'" alt="{{ spec.fieldname }}" class="spec-image" />
+        </div>
+        <div class="spec-info">
+          <h3>{{ spec.fieldname }}</h3>
+          <div class="spec-desc-preview">{{ stripHtml(spec.description) }}</div>
+          <button class="btn btn-outline btn-sm spec-explore-btn">
+            Explore <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-data" *ngIf="!loading && specializations.length === 0">
+      <i class="fa-solid fa-folder-open"></i>
+      <p>No specializations found. Please check back later.</p>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ selectedSpec?.fieldname }}</h2>
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="spec-detail-img" *ngIf="selectedSpec?.imagepath">
+          <img [src]="'http://localhost:8080/uploads/' + selectedSpec.imagepath" alt="{{ selectedSpec.fieldname }}" />
+        </div>
+
+        <div class="spec-full-desc" [innerHTML]="selectedSpec?.description"></div>
+
+        <!-- Only show subspecialties section if loading or results exist -->
+        <div class="subspecialties-section" *ngIf="loadingSubs || subspecializations.length > 0">
+          <h3>Subspecialties & Programs</h3>
+
+          <div class="loading-spinner" *ngIf="loadingSubs">
+            <i class="fa-solid fa-circle-notch fa-spin"></i> Loading Subspecialties...
+          </div>
+
+          <div class="sub-list" *ngIf="!loadingSubs && subspecializations.length > 0">
+            <div class="sub-card" *ngFor="let sub of subspecializations">
+              <div class="sub-card-header">
+                <i class="fa-solid fa-stethoscope"></i>
+                <h4>{{ sub.name }}</h4>
+              </div>
+              <p [innerHTML]="sub.description"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

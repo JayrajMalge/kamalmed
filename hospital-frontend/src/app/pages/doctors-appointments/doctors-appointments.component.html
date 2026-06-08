@@ -1,0 +1,141 @@
+<div class="doctors-page">
+  <div class="header-banner">
+    <div class="container">
+      <h1>Our Medical Specialists</h1>
+      <p>Schedule a consultation with our experienced clinical team.</p>
+    </div>
+  </div>
+
+  <div class="container section">
+    <div class="loading-spinner" *ngIf="loading">
+      <i class="fa-solid fa-circle-notch fa-spin"></i> Loading Doctors...
+    </div>
+
+    <!-- Doctors Grid -->
+    <div class="doctors-grid" *ngIf="!loading && doctors.length > 0">
+      <div class="doctor-card" *ngFor="let doc of doctors">
+
+        <!-- Left: photo strip -->
+        <div class="doc-photo-strip">
+          <img
+            [src]="doc.profilephotopath ? 'http://localhost:8080/uploads/' + doc.profilephotopath : 'assets/placeholder-doctor.png'"
+            alt="{{ doc.name }}"
+          />
+          <span class="doc-status">Available</span>
+        </div>
+
+        <!-- Right: info -->
+        <div class="doc-body">
+          <div class="doc-header">
+            <h3>Dr. {{ doc.name }}</h3>
+            <span class="doc-spec">
+              <span *ngIf="doc.specializations && doc.specializations.length > 0">{{ doc.specializations[0].specialization?.fieldname }}</span>
+              <span *ngIf="!doc.specializations || doc.specializations.length === 0">General Physician</span>
+            </span>
+          </div>
+
+          <div class="doc-meta">
+            <div class="doc-meta-row">
+              <i class="fa-solid fa-envelope"></i>
+              <span>{{ doc.email }}</span>
+            </div>
+            <div class="doc-meta-row">
+              <i class="fa-solid fa-clock"></i>
+              <span>{{ doc.schedulefrom }} – {{ doc.scheduleto }}</span>
+            </div>
+            <div class="doc-meta-row" *ngIf="doc.phone">
+              <i class="fa-solid fa-phone"></i>
+              <span>{{ doc.phone }}</span>
+            </div>
+          </div>
+
+          <div class="doc-about" *ngIf="doc.about" [innerHTML]="doc.about"></div>
+
+          <button class="doc-book-btn" (click)="openBookingModal(doc)">
+            <i class="fa-solid fa-calendar-plus"></i> Book Appointment
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-data" *ngIf="!loading && doctors.length === 0">
+      <i class="fa-solid fa-user-slash"></i>
+      <p>No doctors currently registered in our team.</p>
+    </div>
+  </div>
+
+  <!-- Booking Modal -->
+  <div class="modal-overlay" *ngIf="bookingDoctor" (click)="closeBookingModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Book Appointment</h2>
+        <button class="close-btn" (click)="closeBookingModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="doctor-summary">
+          <i class="fa-solid fa-user-doctor-check"></i>
+          <div>
+            <h4>Dr. {{ bookingDoctor.name }}</h4>
+            <p>{{ bookingDoctor.schedulefrom }} - {{ bookingDoctor.scheduleto }}</p>
+          </div>
+        </div>
+
+        <div class="alert alert-success" *ngIf="bookingSuccess">
+          <i class="fa-solid fa-circle-check"></i> Appointment booked successfully! Redirecting...
+        </div>
+
+        <div class="alert alert-danger" *ngIf="bookingError">
+          <i class="fa-solid fa-circle-exclamation"></i> {{ bookingError }}
+        </div>
+
+        <form (ngSubmit)="bookAppointment()" *ngIf="!bookingSuccess">
+          <!-- Auth Warning -->
+          <div class="auth-warning" *ngIf="!isLoggedIn">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>You must <a routerLink="/login">Login</a> first to book an appointment.</span>
+          </div>
+
+          <div class="form-group" *ngIf="isLoggedIn">
+            <label class="form-label">Preferred Date</label>
+            <input 
+              type="date" 
+              [(ngModel)]="appointmentDate" 
+              name="appointmentDate" 
+              required
+              class="form-control" 
+            />
+          </div>
+
+          <div class="form-group" *ngIf="isLoggedIn">
+            <label class="form-label">Preferred Time</label>
+            <input 
+              type="time" 
+              [(ngModel)]="appointmentTime" 
+              name="appointmentTime" 
+              required
+              class="form-control" 
+            />
+          </div>
+
+          <div class="form-group" *ngIf="isLoggedIn">
+            <label class="form-label">Mobile Number</label>
+            <input 
+              type="tel" 
+              [(ngModel)]="mobileNo" 
+              name="mobileNo" 
+              placeholder="10-digit number"
+              required
+              maxlength="10"
+              class="form-control" 
+            />
+          </div>
+
+          <div class="modal-buttons mt-3" *ngIf="isLoggedIn">
+            <button type="button" class="btn btn-outline" (click)="closeBookingModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Confirm Booking</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

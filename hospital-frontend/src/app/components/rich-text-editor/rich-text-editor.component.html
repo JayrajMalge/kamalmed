@@ -1,0 +1,20 @@
+<div class="editor-container">
+  <div class="editor-toolbar">
+    <button type="button" (click)="format('bold')" [class.active]="isBold" title="Bold">
+      <b>B</b>
+    </button>
+    <button type="button" (click)="format('italic')" [class.active]="isItalic" title="Italic">
+      <i>I</i>
+    </button>
+  </div>
+  <div
+    #editor
+    class="editor-content"
+    contenteditable="true"
+    (input)="onInput()"
+    (blur)="onBlur()"
+    (mouseup)="checkActiveFormats()"
+    (keyup)="checkActiveFormats()"
+    (keydown)="onKeyDown($event)"
+  ></div>
+</div>

@@ -1,0 +1,333 @@
+<div class="home-page">
+
+  <!-- ═══════════════════════════════════════
+       HERO CAROUSEL
+  ═══════════════════════════════════════ -->
+  <section class="hero-carousel" (mouseenter)="stopCarousel()" (mouseleave)="startCarousel()">
+    <div class="carousel-track" [style.transform]="'translateX(-' + currentSlide * 100 + '%)'">
+      <div class="carousel-slide" *ngFor="let slide of carouselSlides; let i = index"
+           [ngClass]="slide.bg">
+        <div class="slide-overlay"></div>
+        <div class="slide-content container">
+          <div class="slide-text">
+            <span class="slide-badge">Kamal Medicare Cancer Centre</span>
+            <h1 [innerHTML]="slide.headline"></h1>
+            <p>{{ slide.sub }}</p>
+            <div class="slide-actions">
+              <a [routerLink]="slide.ctaLink" class="btn-hero-primary">
+                <i class="fa-solid fa-calendar-check"></i> {{ slide.cta }}
+              </a>
+              <a routerLink="/facilities" class="btn-hero-outline">
+                Our Facilities <i class="fa-solid fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel Controls -->
+    <button class="carousel-btn carousel-prev" (click)="prevSlide()" aria-label="Previous slide">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    <button class="carousel-btn carousel-next" (click)="nextSlide(); resetCarouselTimer()" aria-label="Next slide">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+    <!-- Dots -->
+    <div class="carousel-dots">
+      <button *ngFor="let slide of carouselSlides; let i = index"
+              class="dot" [class.active]="i === currentSlide"
+              (click)="goToSlide(i)" [attr.aria-label]="'Go to slide ' + (i+1)"></button>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       STATS STRIP
+  ═══════════════════════════════════════ -->
+  <section class="stats-strip">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item" *ngFor="let s of stats">
+          <div class="stat-icon">
+            <i class="fa-solid {{ s.icon }}"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ s.value }}</span>
+            <span class="stat-label">{{ s.label }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       SPECIALIZATIONS
+  ═══════════════════════════════════════ -->
+  <section class="section specializations-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Our Expertise</span>
+        <h2>Specialization we provide in Our Hospital</h2>
+        <p>We offer a comprehensive range of medical specialties, each with dedicated teams and state-of-the-art equipment.</p>
+      </div>
+
+      <div class="spec-grid" *ngIf="specializations.length > 0">
+        <div class="spec-card" *ngFor="let spec of specializations" [routerLink]="'/specializations'">
+          <div class="spec-img-wrap">
+            <img [src]="getSpecImage(spec)" [alt]="spec.fieldname" class="spec-img" loading="lazy" />
+            <div class="spec-img-overlay"></div>
+          </div>
+          <div class="spec-body">
+            <h3>{{ spec.fieldname }}</h3>
+            <p>{{ truncate(spec.description, 100) }}</p>
+            <span class="spec-link">
+              Explore <i class="fa-solid fa-arrow-right"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Placeholder when no data -->
+      <div class="empty-state" *ngIf="specializations.length === 0 && !loading">
+        <i class="fa-solid fa-stethoscope"></i>
+        <p>Specializations will appear here once added.</p>
+      </div>
+
+      <div class="section-cta">
+        <a routerLink="/specializations" class="btn btn-primary">
+          View All Specializations <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       WHY CHOOSE US BANNER
+  ═══════════════════════════════════════ -->
+  <section class="why-banner">
+    <div class="container">
+      <div class="why-grid">
+        <div class="why-item">
+          <div class="why-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div>
+            <h4>24/7 Emergency Care</h4>
+            <p>Round-the-clock emergency response with advanced life support.</p>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-icon"><i class="fa-solid fa-microscope"></i></div>
+          <div>
+            <h4>Advanced Diagnostics</h4>
+            <p>MRI, CT scan, PET scan and full molecular pathology lab.</p>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-icon"><i class="fa-solid fa-user-doctor"></i></div>
+          <div>
+            <h4>Expert Specialists</h4>
+            <p>Board-certified doctors with national and international recognition.</p>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+          <div>
+            <h4>Patient-Centred Care</h4>
+            <p>Personalised treatment plans designed around you and your family.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       DOCTORS
+  ═══════════════════════════════════════ -->
+  <section class="section doctors-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Medical Team</span>
+        <h2>Our Doctors</h2>
+        <p>Meet our distinguished team of specialists committed to delivering the highest standard of care.</p>
+      </div>
+
+      <!-- Loading skeleton -->
+      <div class="doctors-skeleton" *ngIf="loading">
+        <div class="skeleton-card" *ngFor="let i of [1,2,3,4]"></div>
+      </div>
+
+      <!-- Doctor cards -->
+      <div class="doctors-carousel-wrap" *ngIf="!loading && doctors.length > 0">
+        <button class="carousel-nav-btn prev-btn"
+                (click)="prevDoctors()"
+                [disabled]="doctorOffset === 0"
+                aria-label="Previous doctors">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <div class="doctors-grid">
+          <div class="doctor-card" *ngFor="let doc of visibleDoctors">
+            <div class="doctor-photo-wrap">
+              <img [src]="getDoctorImage(doc)" [alt]="doc.name" class="doctor-photo" loading="lazy" />
+              <div class="doctor-overlay">
+                <a routerLink="/doctors-appointments" class="btn-appt">
+                  <i class="fa-solid fa-calendar-plus"></i> Book Appointment
+                </a>
+              </div>
+            </div>
+            <div class="doctor-info">
+              <h3>{{ doc.name }}</h3>
+              <span class="doctor-spec">{{ getDoctorSpecializations(doc) }}</span>
+              <div class="doctor-schedule" *ngIf="doc.schedulefrom || doc.scheduleto">
+                <i class="fa-regular fa-clock"></i>
+                {{ doc.schedulefrom || '—' }} &ndash; {{ doc.scheduleto || '—' }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="carousel-nav-btn next-btn"
+                (click)="nextDoctors()"
+                [disabled]="doctorOffset + doctorsPerPage >= doctors.length"
+                aria-label="Next doctors">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- Page dots for doctors -->
+      <div class="carousel-dot-row" *ngIf="!loading && doctorPageCount > 1">
+        <button *ngFor="let p of [].constructor(doctorPageCount); let i = index"
+                class="dot" [class.active]="i === doctorCurrentPage"
+                (click)="doctorOffset = i * doctorsPerPage"
+                [attr.aria-label]="'Page ' + (i+1)"></button>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && doctors.length === 0">
+        <i class="fa-solid fa-user-doctor"></i>
+        <p>Doctor profiles will appear here once added.</p>
+      </div>
+
+      <div class="section-cta">
+        <a routerLink="/doctors-appointments" class="btn btn-primary">
+          View All Doctors <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       NEWS & BLOGS
+  ═══════════════════════════════════════ -->
+  <section class="section news-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Latest Updates</span>
+        <h2>News &amp; Blogs</h2>
+        <p>Stay informed with the latest medical news, health tips and stories from our hospital.</p>
+      </div>
+
+      <div class="news-carousel-wrap" *ngIf="news.length > 0">
+        <button class="carousel-nav-btn prev-btn"
+                (click)="prevNews()"
+                [disabled]="newsOffset === 0"
+                aria-label="Previous news">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <div class="news-grid">
+          <article class="news-card" *ngFor="let item of visibleNews">
+            <div class="news-img-wrap">
+              <img [src]="getNewsImage(item)" [alt]="item.title" class="news-img" loading="lazy" />
+              <span class="news-type-badge" *ngIf="item.newstype">{{ item.newstype }}</span>
+            </div>
+            <div class="news-body">
+              <span class="news-date">
+                <i class="fa-regular fa-calendar"></i> {{ formatDate(item.newsdate) }}
+              </span>
+              <h3>{{ truncate(item.title, 70) }}</h3>
+              <p>{{ truncate(item.description, 120) }}</p>
+              <a routerLink="/news-blogs" class="news-read-more">
+                Read More <i class="fa-solid fa-arrow-right"></i>
+              </a>
+            </div>
+          </article>
+        </div>
+
+        <button class="carousel-nav-btn next-btn"
+                (click)="nextNews()"
+                [disabled]="newsOffset + newsPerPage >= news.length"
+                aria-label="Next news">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <div class="empty-state" *ngIf="news.length === 0">
+        <i class="fa-regular fa-newspaper"></i>
+        <p>News articles will appear here once published.</p>
+      </div>
+
+      <div class="section-cta">
+        <a routerLink="/news-blogs" class="btn btn-primary">
+          View All News &amp; Blogs <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       GALLERY STRIP
+  ═══════════════════════════════════════ -->
+  <section class="gallery-strip">
+    <div class="gallery-header container">
+      <span class="section-badge">Our Facilities</span>
+      <h2>Experience World-Class Care</h2>
+    </div>
+    <div class="gallery-mosaic" *ngIf="facilities.length > 0">
+      <a routerLink="/facilities"
+         class="gallery-item"
+         *ngFor="let fac of facilities; let i = index"
+         [class.gallery-tall]="i === 0"
+         [class.gallery-wide]="i === 3"
+         [style.background-image]="fac.images && fac.images.length > 0
+           ? 'url(http://localhost:8080/uploads/' + fac.images[0].imagepath + ')'
+           : 'url(assets/placeholder-facility.png)'">
+        <div class="gallery-overlay">
+          <span>{{ fac.facilityname }}</span>
+        </div>
+      </a>
+    </div>
+    <!-- fallback while loading or no data -->
+    <div class="gallery-mosaic" *ngIf="facilities.length === 0">
+      <div class="gallery-item gallery-tall"><div class="gallery-overlay"><span>Operation Theatre</span></div></div>
+      <div class="gallery-item"><div class="gallery-overlay"><span>ICU &amp; Critical Care</span></div></div>
+      <div class="gallery-item"><div class="gallery-overlay"><span>Diagnostic Lab</span></div></div>
+      <div class="gallery-item gallery-wide"><div class="gallery-overlay"><span>Chemotherapy Suite</span></div></div>
+      <div class="gallery-item"><div class="gallery-overlay"><span>Radiology</span></div></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       CTA BAND
+  ═══════════════════════════════════════ -->
+  <section class="cta-band">
+    <div class="container cta-inner">
+      <div class="cta-text">
+        <h2>Ready to take the first step<br>towards better health?</h2>
+        <p>Our care coordinators are available to guide you through every step of the journey.</p>
+      </div>
+      <div class="cta-actions">
+        <a routerLink="/doctors-appointments" class="btn-hero-primary">
+          <i class="fa-solid fa-calendar-check"></i> Book Appointment
+        </a>
+        <a href="tel:+919371524365" class="cta-call">
+          <i class="fa-solid fa-phone"></i>
+          <span>
+            <small>Call us now</small>
+            +91 93715 24365
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</div>

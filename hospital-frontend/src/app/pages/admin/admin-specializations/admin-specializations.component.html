@@ -1,0 +1,150 @@
+<div class="admin-header">
+  <h1>Manage Specializations</h1>
+  <button class="btn btn-primary" (click)="openAddModal()" *ngIf="!activeSpecForSubs">
+    <i class="fa-solid fa-plus"></i> Add Specialization
+  </button>
+  <button class="btn btn-outline" (click)="closeSubsView()" *ngIf="activeSpecForSubs">
+    <i class="fa-solid fa-arrow-left"></i> Back to Specializations
+  </button>
+</div>
+
+<!-- Specializations List View -->
+<div class="admin-card" *ngIf="!activeSpecForSubs">
+  <div class="loading-spinner" *ngIf="loading">
+    <i class="fa-solid fa-circle-notch fa-spin"></i> Loading...
+  </div>
+
+  <div class="admin-table-container" *ngIf="!loading && specializations.length > 0">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Field Name</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let spec of specializations">
+          <td class="table-img-cell">
+            <img [src]="spec.imagepath ? 'http://localhost:8080/uploads/' + spec.imagepath : 'assets/placeholder-spec.png'" alt="" />
+          </td>
+          <td><strong>{{ spec.fieldname }}</strong></td>
+          <td><div class="table-desc-clip" [innerHTML]="spec.description"></div></td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon btn-icon-edit" (click)="manageSubs(spec)" title="Manage Subspecialties">
+                <i class="fa-solid fa-network-wired"></i>
+              </button>
+              <button class="btn-icon btn-icon-edit" (click)="openEditModal(spec)" title="Edit">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+              <button class="btn-icon btn-icon-delete" (click)="deleteSpecialization(spec.speacializationid)" title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="no-data" *ngIf="!loading && specializations.length === 0">
+    <p>No specializations registered. Create one to get started.</p>
+  </div>
+</div>
+
+<!-- Subspecializations Management Subview -->
+<div class="admin-card" *ngIf="activeSpecForSubs">
+  <div class="sub-header">
+    <h3>Subspecialties under <u>{{ activeSpecForSubs.fieldname }}</u></h3>
+    <button class="btn btn-primary btn-sm-action" (click)="openAddSubModal()">
+      <i class="fa-solid fa-plus"></i> Add Subspecialty
+    </button>
+  </div>
+
+  <div class="sub-table-container mt-3" *ngIf="subspecializations.length > 0">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let sub of subspecializations">
+          <td><strong>{{ sub.name }}</strong></td>
+          <td><div [innerHTML]="sub.description"></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="no-data padding-sm" *ngIf="subspecializations.length === 0">
+    <p>No subspecialties registered under this specialization yet.</p>
+  </div>
+</div>
+
+<!-- Add/Edit Specialization Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ isEditMode ? 'Edit Specialization' : 'Add Specialization' }}</h2>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </div>
+    <form (ngSubmit)="saveSpecialization()">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Specialization Name</label>
+          <input type="text" [(ngModel)]="fieldname" name="fieldname" required class="form-control" placeholder="e.g. Cardiology" />
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Description (HTML allowed)</label>
+          <app-rich-text-editor [(ngModel)]="description" name="description"></app-rich-text-editor>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Featured Image</label>
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" class="form-control" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add Subspecialization Modal -->
+<div class="modal-overlay" *ngIf="showSubModal" (click)="closeSubModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Add Subspecialty</h2>
+      <button class="close-btn" (click)="closeSubModal()">&times;</button>
+    </div>
+    <form (ngSubmit)="saveSubspecialization()">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Subspecialty Name</label>
+          <input type="text" [(ngModel)]="subName" name="subName" required class="form-control" placeholder="e.g. Pediatric Cardiology" />
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Description (HTML allowed)</label>
+          <app-rich-text-editor [(ngModel)]="subDescription" name="subDescription"></app-rich-text-editor>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Upload Image</label>
+          <input type="file" (change)="onSubFileSelected($event)" accept="image/*" class="form-control" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="closeSubModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add Subspecialty</button>
+      </div>
+    </form>
+  </div>
+</div>

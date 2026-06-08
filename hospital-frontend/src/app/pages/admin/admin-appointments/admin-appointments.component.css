@@ -1,0 +1,101 @@
+/* ── Page Header ─────────────────────────────────────── */
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.admin-header h1 { font-size: 1.6rem; font-weight: 700; color: var(--dark-color); }
+
+/* ── Card wrapper ────────────────────────────────────── */
+.admin-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+/* ── Loading / No data ───────────────────────────────── */
+.loading-spinner { padding: 3rem; text-align: center; color: var(--text-muted); }
+.no-data { padding: 3rem; text-align: center; color: var(--text-muted); }
+
+/* ── Table ───────────────────────────────────────────── */
+.admin-table-container { overflow-x: auto; }
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.admin-table thead { background: #f1f5f9; }
+
+.admin-table thead th {
+  padding: 0.875rem 1.25rem;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.admin-table tbody tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.15s;
+}
+.admin-table tbody tr:last-child { border-bottom: none; }
+.admin-table tbody tr:hover { background: #f8fafc; }
+
+.admin-table tbody td {
+  padding: 0.875rem 1.25rem;
+  color: var(--text-main);
+  vertical-align: middle;
+}
+
+/* ── ID cell ─────────────────────────────────────────── */
+.appt-id {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+/* ── Badges ──────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.badge-success { background: var(--success-light); color: #065f46; }
+.badge-danger  { background: var(--danger-light);  color: #991b1b; }
+.badge-info    { background: var(--secondary-light); color: #075985; }
+
+/* ── Action buttons ──────────────────────────────────── */
+.action-buttons { display: flex; align-items: center; gap: 0.5rem; }
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+.btn-icon-edit { background: var(--success-light); color: #065f46; }
+.btn-icon-edit:hover { background: var(--success-color); color: #fff; }
+.btn-icon-delete { background: var(--danger-light); color: var(--danger-color); }
+.btn-icon-delete:hover { background: var(--danger-color); color: #fff; }

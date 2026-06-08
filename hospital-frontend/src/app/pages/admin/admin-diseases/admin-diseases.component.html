@@ -1,0 +1,83 @@
+<div class="admin-header">
+  <h1>Manage Diseases Directory</h1>
+  <button class="btn btn-primary" (click)="openAddModal()">
+    <i class="fa-solid fa-plus"></i> Add Disease Entry
+  </button>
+</div>
+
+<div class="admin-card">
+  <div class="loading-spinner" *ngIf="loading">
+    <i class="fa-solid fa-circle-notch fa-spin"></i> Loading...
+  </div>
+
+  <div class="admin-table-container" *ngIf="!loading && diseases.length > 0">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Preview</th>
+          <th>Disease Name</th>
+          <th>Description Summary</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of diseases">
+          <td class="table-img-cell">
+            <img 
+              [src]="d.images && d.images.length > 0 ? 'http://localhost:8080/uploads/' + d.images[0].imagepath : 'assets/placeholder-disease.png'" 
+              alt="" 
+            />
+          </td>
+          <td><strong>{{ d.name }}</strong></td>
+          <td><div class="table-desc-clip" [innerHTML]="d.description"></div></td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon btn-icon-edit" (click)="openEditModal(d)" title="Edit">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+              <button class="btn-icon btn-icon-delete" (click)="deleteDisease(d.diseaseid)" title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="no-data" *ngIf="!loading && diseases.length === 0">
+    <p>No diseases registered. Create one to get started.</p>
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ isEditMode ? 'Edit Disease' : 'Add Disease Entry' }}</h2>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </div>
+    <form (ngSubmit)="saveDisease()">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Disease / Condition Name</label>
+          <input type="text" [(ngModel)]="name" name="name" required class="form-control" placeholder="e.g. Hypertension" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description (HTML allowed)</label>
+          <app-rich-text-editor [(ngModel)]="description" name="description"></app-rich-text-editor>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Disease Illustration Image</label>
+          <input type="file" (change)="onFilesSelected($event)" accept="image/*" class="form-control" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Entry</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,5 +1,6 @@
 package com.kamalmedicare.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,6 +17,7 @@ public class NewsImage {
     @Column(name = "news")
     private Long id;
 
+    @JsonBackReference("news-images")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "newsid")
     private News news;

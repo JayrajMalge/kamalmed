@@ -1,0 +1,188 @@
+/* ── Page Header ─────────────────────────────────────── */
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.admin-header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--dark-color);
+}
+
+/* ── Card wrapper ────────────────────────────────────── */
+.admin-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Loading ─────────────────────────────────────────── */
+.loading-spinner {
+  padding: 3rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+/* ── No data ─────────────────────────────────────────── */
+.no-data {
+  padding: 3rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* ── Table container ─────────────────────────────────── */
+.admin-table-container {
+  overflow-x: auto;
+}
+
+/* ── Table ───────────────────────────────────────────── */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.admin-table thead {
+  background: #f1f5f9;
+}
+
+.admin-table thead th {
+  padding: 0.875rem 1.25rem;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.admin-table tbody tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.15s;
+}
+
+.admin-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.admin-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.admin-table tbody td {
+  padding: 0.875rem 1.25rem;
+  color: var(--text-main);
+  vertical-align: middle;
+}
+
+/* ── Image cell ──────────────────────────────────────── */
+.table-img-cell {
+  width: 70px;
+}
+
+.table-img-cell img {
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+  display: block;
+}
+
+/* ── Description clip ────────────────────────────────── */
+.table-desc-clip {
+  max-width: 380px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* strip any inline HTML tags shown as text inside the clip */
+.table-desc-clip * {
+  font-size: inherit;
+  color: inherit;
+  font-weight: inherit;
+  font-style: normal;
+}
+
+/* ── Action buttons ──────────────────────────────────── */
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.btn-icon-edit {
+  background: var(--secondary-light);
+  color: var(--secondary-color);
+}
+
+.btn-icon-edit:hover {
+  background: var(--secondary-color);
+  color: #fff;
+}
+
+.btn-icon-delete {
+  background: var(--danger-light);
+  color: var(--danger-color);
+}
+
+.btn-icon-delete:hover {
+  background: var(--danger-color);
+  color: #fff;
+}
+
+/* ── Subspecialties subview ──────────────────────────── */
+.sub-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sub-header h3 {
+  font-size: 1.1rem;
+  color: var(--dark-color);
+}
+
+.btn-sm-action {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+.padding-sm {
+  padding: 2rem 1.5rem;
+}
+
+.mt-3 {
+  margin-top: 0;
+}

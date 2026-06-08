@@ -3,6 +3,7 @@ package com.kamalmedicare.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,6 +29,7 @@ public class Specialization {
     @Column(name = "imagepath")
     private String imagepath;
 
+    @Builder.Default
     @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SubSpecialization> subSpecializations;
+    private List<SubSpecialization> subSpecializations = new ArrayList<>();
 }

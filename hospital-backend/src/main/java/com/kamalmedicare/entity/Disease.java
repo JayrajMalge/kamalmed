@@ -1,8 +1,10 @@
 package com.kamalmedicare.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,6 +27,8 @@ public class Disease {
     @Column(columnDefinition = "mediumtext")
     private String description;
 
+    @JsonManagedReference("disease-images")
+    @Builder.Default
     @OneToMany(mappedBy = "disease", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DiseaseImage> images;
+    private List<DiseaseImage> images = new ArrayList<>();
 }

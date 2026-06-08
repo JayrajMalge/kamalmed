@@ -1,9 +1,11 @@
 package com.kamalmedicare.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,8 +29,8 @@ public class Doctor {
     @Column(length = 50)
     private String email;
 
-    @Pattern(regexp = "^[0-9]{10,12}$")
-    @Column(length = 12)
+    @Pattern(regexp = "^[+]?[0-9\\s\\-()]{7,15}$", message = "Phone must be 7-15 digits and may include +, spaces, dashes, or parentheses")
+    @Column(length = 20)
     private String phone;
 
     @Column(name = "schedulefrom", length = 10)
@@ -58,12 +60,18 @@ public class Doctor {
     @Column(name = "about", columnDefinition = "mediumtext")
     private String about;
 
+    @JsonManagedReference("doctor-educations")
+    @Builder.Default
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Education> educations;
+    private List<Education> educations = new ArrayList<>();
 
+    @JsonManagedReference("doctor-experiences")
+    @Builder.Default
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Experience> experiences;
+    private List<Experience> experiences = new ArrayList<>();
 
+    @JsonManagedReference("doctor-specializations")
+    @Builder.Default
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DoctorSpecialization> specializations;
+    private List<DoctorSpecialization> specializations = new ArrayList<>();
 }

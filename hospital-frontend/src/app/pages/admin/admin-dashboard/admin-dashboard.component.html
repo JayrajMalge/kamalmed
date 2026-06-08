@@ -1,0 +1,73 @@
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <i class="fa-solid fa-user-shield"></i>
+      <span>Admin Portal</span>
+    </div>
+    
+    <div class="admin-profile">
+      <div class="avatar">A</div>
+      <div class="info">
+        <h4>{{ adminUser }}</h4>
+        <span>System Admin</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <ul>
+        <li>
+          <a routerLink="/admin/specializations" routerLinkActive="active">
+            <i class="fa-solid fa-briefcase-medical"></i> Specializations
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/facilities" routerLinkActive="active">
+            <i class="fa-solid fa-hospital"></i> Facilities
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/news-blogs" routerLinkActive="active">
+            <i class="fa-solid fa-newspaper"></i> News & Blogs
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/treatments" routerLinkActive="active">
+            <i class="fa-solid fa-notes-medical"></i> Treatments
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/diseases" routerLinkActive="active">
+            <i class="fa-solid fa-dna"></i> Diseases
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/doctors" routerLinkActive="active">
+            <i class="fa-solid fa-user-doctor"></i> Doctors Team
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/appointments" routerLinkActive="active">
+            <i class="fa-solid fa-calendar-check"></i> Appointments
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a routerLink="/" class="btn-sidebar-secondary">
+        <i class="fa-solid fa-globe"></i> View Website
+      </a>
+      <button (click)="logout()" class="btn-sidebar-danger">
+        <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main content area -->
+  <main class="admin-main">
+    <div class="admin-container">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

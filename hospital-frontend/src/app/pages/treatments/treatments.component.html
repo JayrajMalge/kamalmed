@@ -1,0 +1,87 @@
+<div class="treatments-page">
+  <div class="header-banner">
+    <div class="container">
+      <h1>Medical Treatments & Procedures</h1>
+      <p>Transparent estimation of costs and information about specialized treatments.</p>
+    </div>
+  </div>
+
+  <div class="container section">
+    <!-- Filter Control Panel -->
+    <div class="filters-panel">
+      <div class="filter-toggle-container">
+        <label class="toggle-switch">
+          <input type="checkbox" [checked]="costFilterActive" (change)="toggleCostFilter()" />
+          <span class="slider"></span>
+        </label>
+        <span class="filter-label">Filter by Max Estimated Cost</span>
+      </div>
+
+      <div class="cost-slider-box" *ngIf="costFilterActive">
+        <input 
+          type="range" 
+          min="100" 
+          max="200000" 
+          step="500" 
+          [(ngModel)]="maxCostFilter" 
+          (input)="filterByCost()"
+          class="range-slider" 
+        />
+        <span class="cost-value">₹{{ maxCostFilter | number }}</span>
+      </div>
+    </div>
+
+    <div class="loading-spinner" *ngIf="loading">
+      <i class="fa-solid fa-circle-notch fa-spin"></i> Loading Treatments...
+    </div>
+
+    <!-- Grid View -->
+    <div class="grid-3" *ngIf="!loading && filteredTreatments.length > 0">
+      <div class="card treatment-card" *ngFor="let t of filteredTreatments" (click)="selectTreatment(t)">
+        <div class="treatment-icon">
+          <i class="fa-solid fa-notes-medical"></i>
+        </div>
+        <h3>{{ t.title }}</h3>
+        <div class="treatment-desc-preview" [innerHTML]="t.description"></div>
+        <div class="treatment-meta">
+          <span class="cost-badge" *ngIf="t.cost">₹{{ t.cost | number }}</span>
+          <span class="cost-badge free-badge" *ngIf="!t.cost || t.cost === 0">Consultation Only</span>
+          <span class="learn-more">Details <i class="fa-solid fa-circle-info"></i></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-data" *ngIf="!loading && filteredTreatments.length === 0">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <p>No treatments match your cost criteria.</p>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ selectedTreatment?.title }}</h2>
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="treatment-cost-large" *ngIf="selectedTreatment?.cost">
+          <span class="label">Estimated Treatment Cost:</span>
+          <span class="value">₹{{ selectedTreatment.cost | number }}</span>
+        </div>
+        <div class="treatment-cost-large" *ngIf="!selectedTreatment?.cost || selectedTreatment.cost === 0">
+          <span class="label">Estimated Treatment Cost:</span>
+          <span class="value free">Consultation Required</span>
+        </div>
+        
+        <div class="treatment-full-desc mt-3">
+          <h4>Procedure Details & Information</h4>
+          <div [innerHTML]="selectedTreatment?.description"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

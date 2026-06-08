@@ -1,0 +1,126 @@
+<div class="admin-header">
+  <h1>Manage Doctors Team</h1>
+  <button class="btn btn-primary" (click)="openAddModal()">
+    <i class="fa-solid fa-plus"></i> Add Doctor Profile
+  </button>
+</div>
+
+<div class="admin-card">
+  <div class="loading-spinner" *ngIf="loading">
+    <i class="fa-solid fa-circle-notch fa-spin"></i> Loading...
+  </div>
+
+  <div class="admin-table-container" *ngIf="!loading && doctors.length > 0">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Photo</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Schedule</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let doc of doctors">
+          <td class="table-img-cell">
+            <img
+              [src]="doc.imagename ? 'http://localhost:8080/uploads/' + doc.imagename : 'assets/placeholder-doctor.png'"
+              [alt]="doc.name"
+            />
+          </td>
+          <td>
+            <span class="doctor-name">Dr. {{ doc.name }}</span>
+          </td>
+          <td class="text-muted">{{ doc.email }}</td>
+          <td class="text-muted">{{ doc.phone }}</td>
+          <td>
+            <span class="schedule-badge">
+              <i class="fa-regular fa-clock"></i>
+              {{ doc.schedulefrom }} – {{ doc.scheduleto }}
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon btn-icon-edit" (click)="openEditModal(doc)" title="Edit">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+              <button class="btn-icon btn-icon-delete" (click)="deleteDoctor(doc.doctorid)" title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="no-data" *ngIf="!loading && doctors.length === 0">
+    <i class="fa-solid fa-user-doctor" style="font-size:2rem; color: var(--border-color); display:block; margin-bottom:0.75rem;"></i>
+    <p>No doctors registered. Add a doctor profile to get started.</p>
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ isEditMode ? 'Edit Doctor Profile' : 'Add Doctor Profile' }}</h2>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </div>
+    <form (ngSubmit)="saveDoctor()">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Doctor Name</label>
+          <input type="text" [(ngModel)]="name" name="name" required class="form-control" placeholder="e.g. Rajesh Kumar" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" [(ngModel)]="email" name="email" required class="form-control" placeholder="e.g. rajesh@kamalmed.com" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="text" [(ngModel)]="phone" name="phone" required class="form-control" placeholder="e.g. 9876543210" />
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Schedule From</label>
+            <input type="text" [(ngModel)]="schedulefrom" name="schedulefrom" class="form-control" placeholder="e.g. 09:00 AM" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Schedule To</label>
+            <input type="text" [(ngModel)]="scheduleto" name="scheduleto" class="form-control" placeholder="e.g. 05:00 PM" />
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="!isEditMode">
+          <label class="form-label">Assign Specialization</label>
+          <select [(ngModel)]="selectedSpecializationId" name="selectedSpecializationId" class="form-control">
+            <option [value]="null">None</option>
+            <option *ngFor="let spec of specializations" [value]="spec.speacializationid">
+              {{ spec.fieldname }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">About / Bio</label>
+          <textarea [(ngModel)]="about" name="about" class="form-control" rows="3" placeholder="Doctor experience details..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Profile Photo</label>
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" class="form-control" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Profile</button>
+      </div>
+    </form>
+  </div>
+</div>

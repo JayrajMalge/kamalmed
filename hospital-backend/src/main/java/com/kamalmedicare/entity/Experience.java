@@ -1,5 +1,6 @@
 package com.kamalmedicare.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -31,6 +32,7 @@ public class Experience {
     private LocalDate fromdate;
     private LocalDate todate;
 
+    @JsonBackReference("doctor-experiences")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor")
     private Doctor doctor;

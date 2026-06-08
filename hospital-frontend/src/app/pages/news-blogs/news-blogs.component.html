@@ -1,0 +1,90 @@
+<div class="news-blogs-page">
+  <div class="header-banner">
+    <div class="container">
+      <h1>News & Medical Blogs</h1>
+      <p>Stay informed with the latest updates from Kamal Medicare and helpful health tips.</p>
+    </div>
+  </div>
+
+  <div class="container section">
+    <!-- Tab Controls -->
+    <div class="tabs-container">
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'news'"
+        (click)="switchTab('news')">
+        <i class="fa-solid fa-newspaper"></i> Latest News
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'blog'"
+        (click)="switchTab('blog')">
+        <i class="fa-solid fa-blog"></i> Health & Wellness Blogs
+      </button>
+    </div>
+
+    <div class="loading-spinner" *ngIf="loading">
+      <i class="fa-solid fa-circle-notch fa-spin"></i> Loading updates...
+    </div>
+
+    <!-- Items Grid -->
+    <div class="grid-3" *ngIf="!loading && items.length > 0">
+      <div class="card article-card" *ngFor="let item of items" (click)="selectItem(item)">
+        <div class="article-img-container">
+          <img 
+            [src]="item.images && item.images.length > 0 ? 'http://localhost:8080/uploads/' + item.images[0].imagepath : 'assets/placeholder-news.png'" 
+            alt="{{ item.title }}" 
+            class="article-image" 
+          />
+          <div class="article-date">
+            <span>{{ item.newsdate | date:'MMM d, y' }}</span>
+          </div>
+        </div>
+        
+        <div class="article-info">
+          <h3>{{ item.title }}</h3>
+          <div class="article-desc" [innerHTML]="item.description"></div>
+          <div class="card-action">
+            <span>Read Article <i class="fa-solid fa-arrow-right"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-data" *ngIf="!loading && items.length === 0">
+      <i class="fa-solid fa-folder-open"></i>
+      <p>No {{ activeTab === 'news' ? 'news items' : 'blog posts' }} published yet.</p>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-container modal-large" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h2>{{ selectedItem?.title }}</h2>
+          <p class="modal-meta-date"><i class="fa-solid fa-calendar-days"></i> Published on {{ selectedItem?.newsdate | date:'MMMM d, y' }}</p>
+        </div>
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Multiple image grid/list -->
+        <div class="article-gallery" *ngIf="selectedItem?.images && selectedItem.images.length > 0">
+          <div class="gallery-main">
+            <img [src]="'http://localhost:8080/uploads/' + selectedItem.images[0].imagepath" alt="Main view" />
+          </div>
+          <div class="gallery-thumbs" *ngIf="selectedItem.images.length > 1">
+            <div class="thumb-box" *ngFor="let img of selectedItem.images | slice:1">
+              <img [src]="'http://localhost:8080/uploads/' + $any(img).imagepath" alt="Additional view" />
+            </div>
+          </div>
+        </div>
+
+        <div class="article-full-content mt-3" [innerHTML]="selectedItem?.description"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

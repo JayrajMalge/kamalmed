@@ -1,0 +1,69 @@
+<div class="admin-header">
+  <h1>Manage Appointments</h1>
+</div>
+
+<div class="admin-card">
+  <div class="loading-spinner" *ngIf="loading">
+    <i class="fa-solid fa-circle-notch fa-spin"></i> Loading...
+  </div>
+
+  <div class="admin-table-container" *ngIf="!loading && appointments.length > 0">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Doctor</th>
+          <th>Date & Time</th>
+          <th>Mobile No</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let appt of appointments">
+          <td>#{{ appt.appointmentid }}</td>
+          <td><strong>Dr. {{ appt.doctor?.name || 'Unassigned' }}</strong></td>
+          <td>{{ appt.appointmentdate | date:'medium' }}</td>
+          <td>{{ appt.mobileno }}</td>
+          <td>
+            <span class="badge" [ngClass]="{
+              'badge-success': appt.status === 'Completed',
+              'badge-danger': appt.status === 'Canceled',
+              'badge-info': appt.status === 'Scheduled'
+            }">
+              {{ appt.status }}
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button 
+                class="btn-icon btn-icon-edit" 
+                *ngIf="appt.status === 'Scheduled'" 
+                (click)="updateStatus(appt.appointmentid, 'Completed')" 
+                title="Mark Completed">
+                <i class="fa-solid fa-check"></i>
+              </button>
+              <button 
+                class="btn-icon btn-icon-delete" 
+                *ngIf="appt.status === 'Scheduled'" 
+                (click)="updateStatus(appt.appointmentid, 'Canceled')" 
+                title="Cancel Appointment">
+                <i class="fa-solid fa-ban"></i>
+              </button>
+              <button 
+                class="btn-icon btn-icon-delete" 
+                (click)="deleteAppointment(appt.appointmentid)" 
+                title="Delete Record">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="no-data" *ngIf="!loading && appointments.length === 0">
+    <p>No appointments booked yet.</p>
+  </div>
+</div>

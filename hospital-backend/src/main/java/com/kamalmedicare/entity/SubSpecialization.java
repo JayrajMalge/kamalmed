@@ -1,8 +1,10 @@
 package com.kamalmedicare.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,6 +31,8 @@ public class SubSpecialization {
     @JoinColumn(name = "speacialization")
     private Specialization specialization;
 
+    @JsonManagedReference("subspecialization-images")
+    @Builder.Default
     @OneToMany(mappedBy = "subSpecialization", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SubSpecializationImage> images;
+    private List<SubSpecializationImage> images = new ArrayList<>();
 }

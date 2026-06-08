@@ -1,0 +1,83 @@
+<div class="admin-header">
+  <h1>Manage Treatments</h1>
+  <button class="btn btn-primary" (click)="openAddModal()">
+    <i class="fa-solid fa-plus"></i> Add Treatment
+  </button>
+</div>
+
+<div class="admin-card">
+  <div class="loading-spinner" *ngIf="loading">
+    <i class="fa-solid fa-circle-notch fa-spin"></i> Loading...
+  </div>
+
+  <div class="admin-table-container" *ngIf="!loading && treatments.length > 0">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Treatment Title</th>
+          <th>Estimated Cost</th>
+          <th>Description Summary</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let t of treatments">
+          <td><strong>{{ t.title }}</strong></td>
+          <td>
+            <span class="cost-badge" *ngIf="t.cost">
+              <i class="fa-solid fa-indian-rupee-sign"></i>{{ t.cost | number }}
+            </span>
+            <span *ngIf="!t.cost" class="text-muted">Consultation Only</span>
+          </td>
+          <td><div class="table-desc-clip" [innerHTML]="t.description"></div></td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon btn-icon-edit" (click)="openEditModal(t)" title="Edit">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+              <button class="btn-icon btn-icon-delete" (click)="deleteTreatment(t.treatmentid)" title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="no-data" *ngIf="!loading && treatments.length === 0">
+    <p>No treatments registered. Create one to get started.</p>
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ isEditMode ? 'Edit Treatment' : 'Add Treatment' }}</h2>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </div>
+    <form (ngSubmit)="saveTreatment()">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Treatment Title</label>
+          <input type="text" [(ngModel)]="title" name="title" required class="form-control" placeholder="e.g. Heart Bypass Surgery" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Estimated Cost (INR)</label>
+          <input type="number" [(ngModel)]="cost" name="cost" class="form-control" placeholder="e.g. 150000" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description (HTML allowed)</label>
+          <app-rich-text-editor [(ngModel)]="description" name="description"></app-rich-text-editor>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
